@@ -1,0 +1,6 @@
+{
+  "name": "맞춤형 하이브리드 수학 멘토",
+  "description": "학생들의 눈높이에 맞게 단계별 힌트와 긍정적 강화를 제공하며, 실시간 생성되는 오답 분석 데이터를 체계적으로 수집·기반으로 한 오답 창고 대시보드를 구축하는 완벽한 하이브리드 수학 멘토링 서비스",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
