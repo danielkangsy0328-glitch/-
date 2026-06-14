@@ -29,6 +29,7 @@ export default function MentoringPanel({
   const [userInput, setUserInput] = useState<string>("");
   const [isSending, setIsSending] = useState<boolean>(false);
   const [activeConfirmPopup, setActiveConfirmPopup] = useState<"wrap-up-or-exit" | "wrong-log" | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const problemFileRef = useRef<HTMLInputElement>(null);
@@ -38,6 +39,13 @@ export default function MentoringPanel({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentSession?.messages, isSending]);
+
+  // Auto-clear validation errors when user types or uploads something
+  useEffect(() => {
+    if (problemDescription.trim() || problemImage) {
+      setValidationError(null);
+    }
+  }, [problemDescription, problemImage]);
 
   // Handle grade tier changed (set matching default detail)
   const handleTierChange = (tier: SchoolTier) => {
@@ -132,9 +140,10 @@ export default function MentoringPanel({
   // Handle Form Submission of start mentoring
   const handleStart = () => {
     if (!problemDescription.trim() && !problemImage) {
-      alert("해결하고 싶은 수학 문제를 적거나 사진(카메라)으로 등록해 주세요!");
+      setValidationError("해결하고 싶은 수학 문제를 적거나 사진(카메라)으로 등록해 주세요!");
       return;
     }
+    setValidationError(null);
     const finalTitle = problemTitle.trim() || `${gradeDetail} - 수학 해결 미션`;
     const finalDesc = problemDescription.trim() || "수험생이 첨부하여 제출한 문제 사진을 읽고, 절대로 정답이나 식을 바로 제공하지 말아주시고, 단계별 힌트Scaffolding 유도 규칙을 완수해 주세요.";
     onStartSession(selectedTier, gradeDetail, finalTitle, finalDesc, problemImage || undefined);
@@ -355,6 +364,12 @@ export default function MentoringPanel({
                   )}
                 </div>
               </div>
+
+              {validationError && (
+                <div className="text-xs text-red-500 font-bold bg-red-50 border border-red-200 p-3 rounded-lg text-left" id="validation-error-display">
+                  {validationError}
+                </div>
+              )}
 
               {/* Action Button */}
               <button
